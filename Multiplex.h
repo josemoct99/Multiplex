@@ -6,8 +6,17 @@
 using namespace std;
 
 struct Multiplex{
+	
+	//Nombre del Multiplex
 	string nombre;
-	vector<Sala> salas;
+	//Cantidad de salas en el multiplex
+	int cantSalas = 0;
+	//Arreglo de Salas (inicialmente tiene 0)
+	Sala* salas = new Sala[cantSalas];
+	//Cantidad de peliculas en el multiplex
+	int cantPelis = 0;
+	//Arreglo de Peliculas (inicialmente tiene 0)
+	Pelicula* peliculas = new Pelicula[cantPelis];
 	
 	void prueba(string s){
 		cout << s <<endl;
@@ -27,6 +36,8 @@ struct Multiplex{
 	
 	
 };
+
+
 
 Multiplex miMultiplex;
 
