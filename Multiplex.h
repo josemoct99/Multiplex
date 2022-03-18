@@ -1,7 +1,6 @@
 #include"Sala.h"
 #include"Pelicula.h"
 #include"Tiquete.h"
-#include"Horario.h"
 #include <vector>
 using namespace std;
 
@@ -10,22 +9,70 @@ struct Multiplex{
 	//Nombre del Multiplex
 	string nombre;
 	//Cantidad de salas en el multiplex
-	int cantSalas = 0;
+	int cantSalas;
 	//Arreglo de Salas (inicialmente tiene 0)
-	Sala* salas = new Sala[cantSalas];
+	Sala* salas;
 	//Cantidad de peliculas en el multiplex
-	int cantPelis = 0;
+	int cantPelis;
 	//Arreglo de Peliculas (inicialmente tiene 0)
-	Pelicula* peliculas = new Pelicula[cantPelis];
+	Pelicula* peliculas;
+	//Cantidad de tiquetes en el multiplex
+	int cantTiquetes;
+	//Arreglo de tiquetes (inicialmente tiene 0)
+	Tiquete* tiquetes;
+	//Costo de los tiquetes preferenciales
+	int costoPreferencial;
+	//Costo de los tiquetes generales
+	int costoGeneral;
 	
-	void prueba(string s){
-		cout << s <<endl;
+	//Constructor de Multiplex (Se llama una sola vez, al momento de hacer un objeto de esta estructura)
+	Multiplex(){
+		cantSalas = 0;
+		cantPelis = 0;
+		cantTiquetes = 0;
+		costoPreferencial = 12000;
+		costoGeneral = 8000;
+		salas = new Sala[cantSalas];
+		peliculas = new Pelicula[cantPelis];
+		tiquetes = new Tiquete[cantTiquetes];
 	}
 	
-	
-	string sugerencias(Pelicula peli);
 	//------------------------------------------------------
-	void agregarSala(string nombre, int sillas);
+	string sugerencias(Pelicula peli);
+
+	void agregarSala(string nombre, int numSillas, int numGenerales){
+		//Se comienza construyendo un objeto Sala
+		Sala salaNueva;
+		salaNueva.nombre = nombre;
+		
+		
+		//Ahora se agregan sillas por medio de la estructura Sala
+		for(int i=0; i<numSillas;i++){ //Agrego la cantidad total de sillas pedidas
+			if(i<numGenerales){
+				salaNueva.agregarSilla("General"); //Si aún no llego a la cantidade sillas generales se van agregando de tipo general
+			}else{
+				salaNueva.agregarSilla("Preferencial");	//Una vez se pase ese numero se termina de agregar sillas preferenciales
+			}
+		}
+		
+		//Se agrega una sala al arreglo de salas en el multiplex
+		//Se hace un arreglo temporal con un espacio más para agregar la sala
+		Sala* temp = new Sala[cantSalas+1];
+		//Se pasan las salas anteriores al nuevo arreglo temporal
+		for(int i=0; i<cantSalas;i++){
+			temp[i] = salas[i];
+		}
+		//Se aumenta la variable que cuenta la cantidad de salas
+		cantSalas++;
+		//Se elimina el espacio en memoria ocupado por el arreglo de salas
+		delete[] salas;
+		salas = NULL;
+		//Se hace que apunte al nuevo espacio creado por medio del arreglo temporal
+		salas = temp;
+		//Se agrega al final el nuevo elemento, es decir la sala nueva
+		salas[cantSalas-1] = salaNueva;
+	}
+	
 	void eliminarSala(Sala scine);
 	void generarTiquete(Sala scine, Pelicula peli, string categoria);
 	string mostrarSillasDisponibles(Sala scine);
@@ -33,13 +80,18 @@ struct Multiplex{
 	void agregarSillas(Sala scine, int cantidad);
 	void agregarPelicula(string peli, Sala scine, Horario horario);
 	
-	
-	
+	//------------------------------------------------------
+	void listarSalas(){
+		for(int i=0; i<cantSalas;i++){
+			cout << "Sala con nombre: " <<salas[i].nombre << " "; 
+			cout << "con una cantidad de " << salas[i].cantSillas << " sillas" << endl;
+		}
+	}	
 };
 
 
 
-Multiplex miMultiplex;
+
 
 
 

@@ -4,6 +4,8 @@
 #include <clocale> //Permitir tildes en consola
 using namespace std;
 
+//Instancia del multiplex (Objeto de Multiplex)
+Multiplex miMultiplex;
 //Prototipo de las funciones
 void menuPrincipal();
 void menuAgregarSala();
@@ -96,8 +98,9 @@ void menuAgregarSala(){
 	//lee la opcion del usuario (elige un numero)
 	int opcion;
 	//Variable para leer la sala nueva
-	string nombreSala;
 	char nomSala[50];
+	int cantSillasTotal;
+	int cantSillasGenerales;
 	
 	
 	do{
@@ -118,7 +121,17 @@ void menuAgregarSala(){
 				cout << "Escribe el nombre de la sala" << endl;
 				cin.ignore();  //Le pide a getline que ignore el salto de linea hecho anteriormente (endl)
 				cin.getline(nomSala,50); //Ya que encuentra directamente un cambio de linea se hace lo de arriba
-				cout<< "La sala " <<nomSala << " ha sido agregada con éxito" << endl;
+				cout << "Escibe la cantidad de sillas de la sala" << endl;
+				cin >> cantSillasTotal;
+				do{
+				cout << "Escibe la cantidad de sillas que serán generales, deben ser menor o igual que "<< cantSillasTotal << endl;
+				cin >> cantSillasGenerales;
+				}while(cantSillasGenerales>cantSillasTotal);
+				
+				miMultiplex.agregarSala(nomSala, cantSillasTotal, cantSillasGenerales);
+				cout<< "La sala generada " <<nomSala << " tiene " << cantSillasTotal << " sillas , " << cantSillasGenerales << " son generales y " << cantSillasTotal-cantSillasGenerales << " preferenciales" << endl;
+				
+				miMultiplex.listarSalas();
 				cout << "Oprime cualquier tecla para continuar";
 				system("pause>nul"); //Hará una pausa y no se mostrará nada más en pantalla
 				break;
