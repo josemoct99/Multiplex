@@ -37,6 +37,28 @@ struct Multiplex{
 		tiquetes = new Tiquete[cantTiquetes];
 	}
 	
+	//Obtener una sala de cine
+	Sala getSala(int numSala){
+		for(int i=0; i<cantSalas; i++){
+			if ((i+1) == numSala){
+				return salas[i];
+			}
+		}
+	}
+	
+	
+
+	//Comprobar que la sala añadida no exista
+	bool comprobarNombreSala(string nombre){
+		for(int i=0; i<cantSalas ; i++){
+			if(salas[i].nombre == nombre){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	
 	//------------------------------------------------------
 	string sugerencias(Pelicula peli);
 
@@ -73,17 +95,43 @@ struct Multiplex{
 		salas[cantSalas-1] = salaNueva;
 	}
 	
-	void eliminarSala(Sala scine);
+	void eliminarSala(int numSala){
+		int cont = 0;
+		Sala* temp = new Sala[cantSalas-1];
+		
+		for(int i=0; i<cantSalas;i++){
+			
+			if((i+1) != numSala){
+				temp[cont] = salas[i];
+				cont++;
+			}
+		}
+		
+		cantSalas --;
+		delete[] salas;
+		salas = NULL;
+		
+		salas = temp;
+	}
+	
+	
 	void generarTiquete(Sala scine, Pelicula peli, string categoria);
 	string mostrarSillasDisponibles(Sala scine);
 	void cambiarCostoTiquetes(string categoria, int valor);
 	void agregarSillas(Sala scine, int cantidad);
-	void agregarPelicula(string peli, Sala scine, Horario horario);
+	
+	void agregarPelicula(string peli, int numSala, string fecha, string hora){
+		for(int i=0; i<cantSalas; i++){
+			if ((i+1) == numSala){
+				salas[i].cantSillas=0;
+			}
+		}
+	}
 	
 	//------------------------------------------------------
 	void listarSalas(){
 		for(int i=0; i<cantSalas;i++){
-			cout << "Sala con nombre: " <<salas[i].nombre << " "; 
+			cout << "\t\t\t"<<(i+1) <<". Sala '" <<salas[i].nombre << "' "; 
 			cout << "con una cantidad de " << salas[i].cantSillas << " sillas" << endl;
 		}
 	}	
