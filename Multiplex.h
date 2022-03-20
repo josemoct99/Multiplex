@@ -123,7 +123,7 @@ struct Multiplex{
 	void agregarPelicula(string peli, int numSala, string fecha, string hora){
 		for(int i=0; i<cantSalas; i++){
 			if ((i+1) == numSala){
-				salas[i].cantSillas=0;
+				salas[i].agregarFuncion(peli, fecha, hora);
 			}
 		}
 	}

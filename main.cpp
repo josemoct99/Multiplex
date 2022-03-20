@@ -400,20 +400,19 @@ void menuAgregarPelicula(){
 	int opcion;
 	//Variable para leer el nombre de la pelicula
 	char nombrePeli[50];
-	//Variable para leer el numero de sala
-	int numSala;
+	//Variable para leer el numero de sala, día y hora
+	int numSala, numDia, numHora;
 	
 	do{
 		system("cls");
 		//Titulo del menu principal
-		cout << "\n\t\t\t	Se agregarán una película" << endl << endl;
+		cout << "\n\t\t\t	Se agregará una película" << endl << endl;
 		cout << "\t\t\tCantidad de salas actuales: " << miMultiplex.cantSalas << endl;
 		miMultiplex.listarSalas();
 		
-		cout << "\t\t\t--------------------------------------------" << endl;
 		//Opciones del menu
 		cout << "\t\t\tOpciones:" <<endl;
-        cout << "\t\t\t 1. Ingresar datos de pelicula" <<endl;
+        cout << "\t\t\t 1. Elegir sala para la película" <<endl;
         cout << "\t\t\t 2. Retroceder" <<endl;
 		cout << "\t\t\t--------------------------------------------" << endl;
 		
@@ -423,16 +422,48 @@ void menuAgregarPelicula(){
 		//Alternativas
 		switch(opcion){
 			case 1:
-				cout << "\t\t\tEscribe el nombre de la pelicula" << endl << "\t\t\t";
-				cin.ignore();  //Le pide a getline que ignore el salto de linea hecho anteriormente (endl)
-				cin.getline(nombrePeli,50); //Ya que encuentra directamente un cambio de linea se hace lo de arriba
+				if(miMultiplex.cantSalas>0){
 				cout << "\t\t\tEscribe el numero asociado a la sala para la pelicula " << endl << "\t\t\t";
 				cin >> numSala;
 				
 				if(numSala > 0 && numSala <= miMultiplex.cantSalas){	
-				miMultiplex.agregarPelicula(nombrePeli, numSala, "03/18/2022", "12:00");
+					cout << "\t\t\t--------------------------------------------" << endl;
+					cout << "\t\t\tCantidad de funciones en la sala: " <<  miMultiplex.salas[numSala-1].cantFunciones << endl;
+					cout << miMultiplex.salas[numSala-1].listarFunciones();
+					
+					cout << "\t\t\t--------------------------------------------" << endl;
+					cout << "\t\t\tDías de la semana: " << endl;
+					mostrarDias();
+					
+					
+					cout << "\t\t\t--------------------------------------------" << endl;
+					cout << "\t\t\tHoras del día: " << endl;
+					mostrarHoras();
+					
+					cout << "\t\t\t--------------------------------------------" << endl;
+					cout << "\t\t\tEscribe el nombre de la pelicula" << endl << "\t\t\t";
+					cin.ignore();  //Le pide a getline que ignore el salto de linea hecho anteriormente (endl)
+					cin.getline(nombrePeli,50); //Ya que encuentra directamente un cambio de linea se hace lo de arriba
+					
+					cout << "\t\t\tNúmero asociado al día:" << endl << "\t\t\t";
+					cin >> numDia;
+					
+					cout << "\t\t\tNúmero asociado a la hora:" << endl << "\t\t\t";
+					cin >> numHora;
+					
+					if(miMultiplex.salas[numSala-1].funcionNuevaDisponible(dias[numDia-1], horas[numHora-1])){
+						miMultiplex.agregarPelicula(nombrePeli, numSala, dias[numDia-1], horas[numHora-1]);
+						cout << "\t\t\tLa película ha sido agregada correctamente, nueva función generada" << endl << "\t\t\t";
+					}else{
+						cout << "\t\t\tLa función ya existe, no fue posible crearla" << endl << "\t\t\t";
+					}
+					
+					}else{
+						cout<< "\t\t\tEl número no coincide con una sala existente"<<endl;	
+					}
+					
 				}else{
-					cout<< "\t\t\tEl número no coincide con una sala existente"<<endl;	
+					cout << "\t\t\tDebe haber al menos una sala para poder agregar una película" << endl;
 				}
 				cout << "\t\t\tOprime cualquier tecla para continuar";
 				system("pause>nul"); //Hará una pausa y no se mostrará nada más en pantalla
