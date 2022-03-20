@@ -111,7 +111,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit7]
-FileName=Horario.h
+FileName=FuncionCine.h
 CompileCpp=1
 Folder=
 Compile=1

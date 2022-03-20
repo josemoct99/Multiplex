@@ -9,6 +9,4 @@ struct Silla{
 	//Categoria de la silla
 	string cagetoria;
 	
-	
-	
 };

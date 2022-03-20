@@ -38,7 +38,7 @@ struct Multiplex{
 	}
 	
 	//Obtener una sala de cine
-	Sala getSala(int numSala){
+	Sala & getSala(int numSala){
 		for(int i=0; i<cantSalas; i++){
 			if ((i+1) == numSala){
 				return salas[i];
@@ -69,13 +69,7 @@ struct Multiplex{
 		
 		
 		//Ahora se agregan sillas por medio de la estructura Sala
-		for(int i=0; i<numSillas;i++){ //Agrego la cantidad total de sillas pedidas
-			if(i<numGenerales){
-				salaNueva.agregarSilla("General"); //Si aún no llego a la cantidade sillas generales se van agregando de tipo general
-			}else{
-				salaNueva.agregarSilla("Preferencial");	//Una vez se pase ese numero se termina de agregar sillas preferenciales
-			}
-		}
+		agregarSillas(salaNueva, numSillas, numGenerales);
 		
 		//Se agrega una sala al arreglo de salas en el multiplex
 		//Se hace un arreglo temporal con un espacio más para agregar la sala
@@ -118,7 +112,16 @@ struct Multiplex{
 	void generarTiquete(Sala scine, Pelicula peli, string categoria);
 	string mostrarSillasDisponibles(Sala scine);
 	void cambiarCostoTiquetes(string categoria, int valor);
-	void agregarSillas(Sala scine, int cantidad);
+	
+	void agregarSillas(Sala &sala, int cantidad, int numGenerales){
+		for(int i=0; i<cantidad;i++){ //Agrego la cantidad total de sillas pedidas
+			if(i<numGenerales){
+				sala.agregarSilla("General"); //Si aún no llego a la cantidade sillas generales se van agregando de tipo general
+			}else{
+				sala.agregarSilla("Preferencial");	//Una vez se pase ese numero se termina de agregar sillas preferenciales
+			}
+		}
+	}
 	
 	void agregarPelicula(string peli, int numSala, string fecha, string hora){
 		for(int i=0; i<cantSalas; i++){

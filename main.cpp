@@ -355,11 +355,19 @@ void menuAgregarSillas(){
 	int opcion;
 	//Variable para leer el número de sillas
 	int nsillas;
+	//Variable para saber  cuantas son generales
+	int sillasGenerales;
+	//Variable para leer el numero de la sala
+	int numSala;
 	
 	do{
 		system("cls");
 		//Titulo del menu principal
 		cout << "\n\t\t\t	Se agregarán sillas a una sala" << endl << endl;
+		//Texto de salas actuales
+		cout << "\t\t\tCantidad de salas actuales: " << miMultiplex.cantSalas << endl;
+		miMultiplex.listarSalas();
+		cout << "\t\t\t--------------------------------------------" << endl;
 		//Opciones del menu principal
         cout << "\t\t\t 1. Seleccionar Sala" <<endl;
         cout << "\t\t\t 2. Retroceder" <<endl;
@@ -371,10 +379,31 @@ void menuAgregarSillas(){
 		//Alternativas
 		switch(opcion){
 			case 1:
-				cout << "Escribe la cantidad de sillas que deseas agregar" << endl;
-				cin >> nsillas;
-				cout<< "se han agregado "<< nsillas << " sillas con éxito" << endl;
-				cout << "Oprime cualquier tecla para continuar";
+				
+				if(miMultiplex.cantSalas>0){	
+					cout << "\t\t\tEscribe el numero asociado a la sala para agregar sillas " << endl << "\t\t\t";
+					cin >> numSala;
+					
+					if(numSala > 0 && numSala <= miMultiplex.cantSalas){
+						
+					cout << "\t\t\tEscribe la cantidad de sillas que deseas agregar" << endl <<  "\t\t\t";
+					cin >> nsillas;
+					
+						do{
+							cout << "\t\t\tEscibe la cantidad de sillas generales, deben ser menor o igual que "<< nsillas << endl << "\t\t\t";
+							cin >> sillasGenerales;
+						}while(sillasGenerales>nsillas || sillasGenerales<0);
+						miMultiplex.agregarSillas(miMultiplex.getSala(numSala), nsillas, sillasGenerales);
+						cout<< "\t\t\tSe han agregado "<< nsillas << " sillas con éxito, " << sillasGenerales << " son generales y " << nsillas-sillasGenerales << " son preferenciales" << endl;
+						
+					}else{
+						cout<< "\t\t\tEl número no coincide con una sala existente"<<endl;	
+					}
+				}else{
+					cout << "\t\t\tDebe haber al menos una sala para poder agregar una película" << endl;
+				}
+
+				cout << "\t\t\tOprime cualquier tecla para continuar";
 				system("pause>nul"); //Hará una pausa y no se mostrará nada más en pantalla
 				break;
 			case 2:
