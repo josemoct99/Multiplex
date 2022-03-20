@@ -1,14 +1,7 @@
-#include"Silla.h"
 #include"FuncionCine.h"
 #include <sstream>
 using namespace std;
-//funcion para convertir int a string
-string int_to_string(int i)
-{
-    stringstream ss;
-    ss << i;
-    return ss.str();
-}
+
 
 struct Sala{
 	//Nombre unico de la sala
@@ -36,7 +29,7 @@ struct Sala{
 		Silla sillaNueva;
 		sillaNueva.id = cantSillas+1; //Acá es para emepzar el id desde 1
 		sillaNueva.cagetoria = categoria;
-		sillaNueva.disponible = false;
+		sillaNueva.disponible = true;
 		
 		//Ahora se agrega el objeto al arreglo de sillas
 		//Se hace un arreglo temporal con un espacio más para agregar la silla
@@ -64,21 +57,43 @@ struct Sala{
 		return lista;
 	}
 	
-	void agregarFuncion(string peli, string dia, string hora){
+	
+	
+	string listarFuncionesConSillas(){
+		string lista = "";
+		for(int i=0; i<cantFunciones;i++){
+			lista += funciones[i].mostrarInfo() + "\n";
+			lista += "\t\t\tSillas Generales disponibles: " + funciones[i].sillasGDisponibles() + "\n";
+			lista += "\t\t\tSillas Preferenciales disponibles: " + funciones[i].sillasPDisponibles() + "\n";
+			lista += "\t\t\t******************************************************** \n";
+		}
+		return lista;
+	}
+	
+	void agregarFuncion(string peli, string dia, string hora, int idFuncion){
 		//Se hace el objeto FuncionCine
 		FuncionCine funcionNueva;
-		funcionNueva.id = int_to_string(cantFunciones+1);
+		funcionNueva.id = int_to_string(idFuncion);
 		funcionNueva.peli = peli;
 		funcionNueva.dia = dia;
 		funcionNueva.hora = hora;
 		funcionNueva.sala = nombre;
 		
+		//Se copia las sillas del cine para pasarla a la función
+		Silla* tempS = new Silla[cantSillas];
+		
+		for(int i=0; i<cantSillas;i++){
+			tempS[i] = sillas[i];
+		}
+		//Se pasa la copia de sillas a la función nueva
+		funcionNueva.setSillas(tempS, cantSillas);
+		
 		//Ahora se agrega el objeto al arreglo de funciones
 		//Se hace un arreglo temporal con un espacio más para agregar la silla
-		FuncionCine* temp = new FuncionCine[cantFunciones+1];
+		FuncionCine* tempF = new FuncionCine[cantFunciones+1];
 		//Se pasan las funciones anteriores al nuevo arreglo temporal
 		for(int i=0; i<cantFunciones;i++){
-			temp[i] = funciones[i];
+			tempF[i] = funciones[i];
 		}
 		//Se aumenta la variable que cuenta la cantidad de funciones
 		cantFunciones++;
@@ -86,7 +101,7 @@ struct Sala{
 		delete[] funciones;
 		funciones = NULL;
 		//Se hace que apunte al nuevo espacio creado por medio del arreglo temporal
-		funciones = temp;
+		funciones = tempF;
 		//Se agrega al final el nuevo elemento, es decir la silla nueva
 		funciones[cantFunciones-1] = funcionNueva;
 		
@@ -102,6 +117,10 @@ struct Sala{
 			}
 		}
 		return true;
+	}
+	
+	void listarSillasDisponibles(FuncionCine funcion){
+		
 	}
 	
 };

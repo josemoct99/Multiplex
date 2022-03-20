@@ -1,4 +1,16 @@
+#include"Silla.h"
+
+#include <sstream>
 using namespace std;
+//funcion para convertir int a string
+string int_to_string(int i)
+{
+    stringstream ss;
+    ss << i;
+    return ss.str();
+}
+
+
 //A continuación solo son plantillas para tomar la info para las dias y horarios disponibles
 
 //Arreglo de días disponibles para esa semana de marzo
@@ -29,12 +41,24 @@ struct FuncionCine{
 	string dia;
 	//Hora  de la función
 	string hora;
+	//Cantidad de sillas para la funcion especifica
+	int cantSillas;
+	//Sillas para la función específica
+	Silla* sillas;
+	
+	
+	
+	//Poner cantidad de sillas
+	void setSillas(Silla* sillas, int cantSillas){
+		this->sillas = sillas;
+		this->cantSillas = cantSillas;
+	}
 	
 	//Devuelve un string con toda la información de la función
 	string mostrarInfo(){
 		return "\t\t\tID de la función: " + id + "\n\t\t\tPelícula: " + peli + "\n\t\t\tSala: " + sala + "\n\t\t\tFecha y Hora: " + dia + " - " + hora + "\n";
 	}
-	
+	/*
 	//Se asgina un día de la semana a la variable dia
 	void setFecha(int numFecha){
 		for(int i=0; i<sizeof(dias);i++){
@@ -52,7 +76,33 @@ struct FuncionCine{
 			}
 		}
 	}
+	*/
 	
+	string sillasGDisponibles(){
+		string texto;
+		int contador = 0;
+		for(int i=0; i<cantSillas;i++){
+			if(sillas[i].disponible && sillas[i].cagetoria == "General"){
+				contador++;
+			}
+		}
+		texto = int_to_string(contador);
+		texto += " sillas disponibles \n";
+		return texto;
+	}
+	
+		string sillasPDisponibles(){
+		string texto;
+		int contador = 0;
+		for(int i=0; i<cantSillas;i++){
+			if(sillas[i].disponible && sillas[i].cagetoria == "Preferencial"){
+				contador++;
+			}
+		}
+		texto = int_to_string(contador);
+		texto += " sillas disponibles \n";
+		return texto;
+	}
 	
 };
 

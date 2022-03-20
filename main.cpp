@@ -8,13 +8,12 @@ using namespace std;
 Multiplex miMultiplex;
 //Prototipo de las funciones
 void menuPrincipal();
-void menuAgregarSala();
-void menuEliminarSala();
+void menuAgregarSala();//
+void menuEliminarSala();//
 void menuGenerarTiquete();
-void menuMostrarSillasDisponibles();
 void menuCambiarCostoTiquetes();
-void menuAgregarSillas();
-void menuAgregarPelicula();
+void menuAgregarSillas();//
+void menuAgregarPelicula();//
 
 
 //Main del programa
@@ -45,14 +44,13 @@ void menuPrincipal(){
         cout << "\t\t\t 1. Agregar Sala de Cine" <<endl;
         cout << "\t\t\t 2. Eliminar Sala de Cine" <<endl;
         cout << "\t\t\t 3. Vender Tiquete" <<endl;
-        cout << "\t\t\t 4. Ver sillas disponibles en una sala" <<endl;
-        cout << "\t\t\t 5. Cambiar precio de tiquetes" <<endl;
-        cout << "\t\t\t 6. Agregar sillas a una sala" <<endl;
-        cout << "\t\t\t 7. Agregar película" <<endl;
+        cout << "\t\t\t 4. Cambiar precio de tiquetes" <<endl;
+        cout << "\t\t\t 5. Agregar sillas a una sala" <<endl;
+        cout << "\t\t\t 6. Agregar película" <<endl;
         cout << "\t\t\t 0. SALIR" << endl << endl;		
 		
 		//Lee la opcion elegida del usuario
-		cout << "\tElige una opción: ";
+		cout << "\t\t\tElige una opción: ";
 		cin >> opcion;
 		
 		//Alternativas
@@ -67,15 +65,12 @@ void menuPrincipal(){
 				menuGenerarTiquete();
 				break;
 			case 4:
-				menuMostrarSillasDisponibles();
-				break;
-			case 5:
 				menuCambiarCostoTiquetes();
 				break;
-			case 6:
+			case 5:
 				menuAgregarSillas();
 				break;
-			case 7:
+			case 6:
 				menuAgregarPelicula();
 				break;
 			case 0:
@@ -117,7 +112,7 @@ void menuAgregarSala(){
         cout << "\t\t\t2. Retroceder" <<endl;
 		cout << "\t\t\t--------------------------------------------" << endl;
 		//Lee la opcion elegida del usuario
-		cout << "\tElige una opción:";
+		cout << "\t\t\tElige una opción:";
 		cin >> opcion;
 		
 		//Alternativas
@@ -187,8 +182,9 @@ void menuEliminarSala(){
         cout << "\t\t\t 2. Retroceder" <<endl;
 		cout << "\t\t\t--------------------------------------------" << endl;
 		//Lee la opcion elegida del usuario
-		cout << "\tElige una opción: ";
+		cout << "\t\t\tElige una opción: ";
 		cin >> opcion;
+		cout << "\t\t\t--------------------------------------------" << endl;
 		
 		//Alternativas
 		switch(opcion){
@@ -226,31 +222,62 @@ void menuGenerarTiquete(){
 	bool repetir = true;
 	//lee la opcion del usuario (elige un numero)
 	int opcion;
+	//Numero de la sala para escoger
+	int numSala;
+	//Número de pelicula para escoger
+	int numPeli;
 	
 	
 	do{
 		system("cls");
 		//Titulo del menu principal
 		cout << "\n\t\t\t	Generación de nuevo tiquete" << endl << endl;
+		//Texto de salas actuales
+		cout << "\t\t\tCantidad de salas actuales: " << miMultiplex.cantSalas << endl;
+		miMultiplex.listarSalas();
+		cout << "\t\t\t--------------------------------------------" << endl;
 		//Opciones del menu principal
+		cout << "\t\t\tOpciones:" <<endl;
         cout << "\t\t\t 1. Elegir película para el nuevo tiquete" <<endl;
-        cout << "\t\t\t 2. Retroceder" <<endl;
-		
+        cout << "\t\t\t 2. Elegir sala para ver disponibilidad de sillas" <<endl;
+        cout << "\t\t\t 3. Retroceder" <<endl;
+		cout << "\t\t\t--------------------------------------------" << endl;
 		//Lee la opcion elegida del usuario
-		cout << "\tElige una opción: ";
+		cout << "\t\t\tElige una opción: ";
 		cin >> opcion;
+		cout << "\t\t\t--------------------------------------------" << endl;
 		
 		//Alternativas
 		switch(opcion){
 			case 1:
-				cout<< "Los horarios y salas sugeridas para la película se están mostrando..." << endl;
-				cout << "Oprime cualquier tecla para elegir un horario"<<endl;
-				system("pause>nul"); //Hará una pausa y no se mostrará nada más en pantalla
-				cout<< "Tiquete generado exitósamente" <<endl;
-				cout << "Oprime cualquier tecla para continuar";
+				cout << "\t\t\t Las Peliculas disponibles son: " << endl;
+				miMultiplex.listarPeliculas();
+				cout<< "\t\t\tLos horarios y salas sugeridas para la película se están mostrando..." << endl;
+				
+				cout << "\t\t\tOprime cualquier tecla para continuar";
 				system("pause>nul"); //Hará una pausa y no se mostrará nada más en pantalla
 				break;
 			case 2:
+				if(miMultiplex.cantSalas>0){	
+					cout << "\t\t\tEscribe el numero asociado a la sala para ver su información" << endl << "\t\t\t";
+					cin >> numSala;
+					
+					if(numSala > 0 && numSala <= miMultiplex.cantSalas){
+						cout << "\t\t\t--------------------------------------------" << endl;
+						cout << "\t\t\tPara la sala '" << miMultiplex.getSala(numSala).nombre << "' estas son las Funciones disponibles: " << endl;
+						cout << "\t\t\t********************************************************" << endl;
+						cout << miMultiplex.getSala(numSala).listarFuncionesConSillas();
+					}else{
+							cout<< "\t\t\tEl número no coincide con una sala existente"<<endl;	
+					}
+				}else{
+					cout << "\t\t\tDebe haber al menos una sala para poder ver sillas disponibles" << endl;
+				}
+				
+				cout << "\t\t\tOprime cualquier tecla para continuar";
+				system("pause>nul"); //Hará una pausa y no se mostrará nada más en pantalla
+				break;
+			case 3:
 				repetir = false;
 				break;	
 		}
@@ -258,43 +285,6 @@ void menuGenerarTiquete(){
 	}while(repetir);
 	
 	
-}
-
-
-//Menú para ver las sillas disponibles que hay en una sala 
-void menuMostrarSillasDisponibles(){
-	
-	//mientras sea verdadero se mantendra el menu en pantalla
-	bool repetir = true;
-	//lee la opcion del usuario (elige un numero)
-	int opcion;
-	
-	
-	do{
-		system("cls");
-		//Titulo del menu principal
-		cout << "\n\t\t\t	Sillas disponibles en salas" << endl << endl;
-		//Opciones del menu principal
-        cout << "\t\t\t 1. Escoger Sala" <<endl;
-        cout << "\t\t\t 2. Retroceder" <<endl;
-		
-		//Lee la opcion elegida del usuario
-		cout << "\tElige una opción: ";
-		cin >> opcion;
-		
-		//Alternativas
-		switch(opcion){
-			case 1:
-				cout<< "Las sillas disponibles en la sala escogida se están mostrando..." << endl;
-				cout << "Oprime cualquier tecla para continuar";
-				system("pause>nul"); //Hará una pausa y no se mostrará nada más en pantalla
-				break;
-			case 2:
-				repetir = false;
-				break;	
-		}
-		
-	}while(repetir);
 }
 
 //Menú para cambiar el costo del tiquete dada una categoría 
@@ -311,12 +301,13 @@ void menuCambiarCostoTiquetes(){
 		//Titulo del menu principal
 		cout << "\n\t\t\t	Cambiar costo de tiquetes " << endl << endl;
 		//Opciones del menu principal
+		cout << "\t\t\tOpciones:" <<endl;
         cout << "\t\t\t 1. Cambiar precio tiquetes Generales" <<endl;
         cout << "\t\t\t 2. Cambiar precio tiquetes Preferenciales" <<endl;
         cout << "\t\t\t 3. Retroceder" <<endl;
-		
+		cout << "\t\t\t--------------------------------------------" << endl;
 		//Lee la opcion elegida del usuario
-		cout << "\tElige una opción: ";
+		cout << "\t\t\tElige una opción: ";
 		cin >> opcion;
 		
 		//Alternativas
@@ -369,11 +360,12 @@ void menuAgregarSillas(){
 		miMultiplex.listarSalas();
 		cout << "\t\t\t--------------------------------------------" << endl;
 		//Opciones del menu principal
+		cout << "\t\t\tOpciones:" <<endl;
         cout << "\t\t\t 1. Seleccionar Sala" <<endl;
         cout << "\t\t\t 2. Retroceder" <<endl;
-		
+		cout << "\t\t\t--------------------------------------------" << endl;
 		//Lee la opcion elegida del usuario
-		cout << "\tElige una opción: ";
+		cout << "\t\t\tElige una opción: ";
 		cin >> opcion;
 		
 		//Alternativas
@@ -438,14 +430,14 @@ void menuAgregarPelicula(){
 		cout << "\n\t\t\t	Se agregará una película" << endl << endl;
 		cout << "\t\t\tCantidad de salas actuales: " << miMultiplex.cantSalas << endl;
 		miMultiplex.listarSalas();
-		
+		cout << "\t\t\t--------------------------------------------" << endl;
 		//Opciones del menu
 		cout << "\t\t\tOpciones:" <<endl;
         cout << "\t\t\t 1. Elegir sala para la película" <<endl;
         cout << "\t\t\t 2. Retroceder" <<endl;
 		cout << "\t\t\t--------------------------------------------" << endl;
 		
-		cout << "\tElige una opción: ";
+		cout << "\t\t\tElige una opción: ";
 		cin >> opcion;
 		
 		//Alternativas
@@ -458,8 +450,14 @@ void menuAgregarPelicula(){
 				if(numSala > 0 && numSala <= miMultiplex.cantSalas){	
 					cout << "\t\t\t--------------------------------------------" << endl;
 					cout << "\t\t\tCantidad de funciones en la sala: " <<  miMultiplex.salas[numSala-1].cantFunciones << endl;
-					cout << miMultiplex.salas[numSala-1].listarFunciones();
+					cout << miMultiplex.getSala(numSala).listarFunciones();
 					
+					cout << "\t\t\t--------------------------------------------" << endl;
+					cout << "\t\t\tEscribe el nombre de la pelicula" << endl << "\t\t\t";
+					cin.ignore();  //Le pide a getline que ignore el salto de linea hecho anteriormente (endl)
+					cin.getline(nombrePeli,50); //Ya que encuentra directamente un cambio de linea se hace lo de arriba
+					cout << "\t\t\t--------------------------------------------" << endl;
+					cout << "\t\t\tListado de Días y horas:" << endl;
 					cout << "\t\t\t--------------------------------------------" << endl;
 					cout << "\t\t\tDías de la semana: " << endl;
 					mostrarDias();
@@ -469,10 +467,6 @@ void menuAgregarPelicula(){
 					cout << "\t\t\tHoras del día: " << endl;
 					mostrarHoras();
 					
-					cout << "\t\t\t--------------------------------------------" << endl;
-					cout << "\t\t\tEscribe el nombre de la pelicula" << endl << "\t\t\t";
-					cin.ignore();  //Le pide a getline que ignore el salto de linea hecho anteriormente (endl)
-					cin.getline(nombrePeli,50); //Ya que encuentra directamente un cambio de linea se hace lo de arriba
 					
 					cout << "\t\t\tNúmero asociado al día:" << endl << "\t\t\t";
 					cin >> numDia;
@@ -480,8 +474,8 @@ void menuAgregarPelicula(){
 					cout << "\t\t\tNúmero asociado a la hora:" << endl << "\t\t\t";
 					cin >> numHora;
 					
-					if(miMultiplex.salas[numSala-1].funcionNuevaDisponible(dias[numDia-1], horas[numHora-1])){
-						miMultiplex.agregarPelicula(nombrePeli, numSala, dias[numDia-1], horas[numHora-1]);
+					if(miMultiplex.getSala(numSala).funcionNuevaDisponible(dias[numDia-1], horas[numHora-1])){
+						miMultiplex.agregarPelicula(nombrePeli, miMultiplex.getSala(numSala), dias[numDia-1], horas[numHora-1]);
 						cout << "\t\t\tLa película ha sido agregada correctamente, nueva función generada" << endl << "\t\t\t";
 					}else{
 						cout << "\t\t\tLa función ya existe, no fue posible crearla" << endl << "\t\t\t";

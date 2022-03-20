@@ -24,6 +24,8 @@ struct Multiplex{
 	int costoPreferencial;
 	//Costo de los tiquetes generales
 	int costoGeneral;
+	//ID para las funciones en general
+	int idFuncion;
 	
 	//Constructor de Multiplex (Se llama una sola vez, al momento de hacer un objeto de esta estructura)
 	Multiplex(){
@@ -123,12 +125,32 @@ struct Multiplex{
 		}
 	}
 	
-	void agregarPelicula(string peli, int numSala, string fecha, string hora){
-		for(int i=0; i<cantSalas; i++){
-			if ((i+1) == numSala){
-				salas[i].agregarFuncion(peli, fecha, hora);
-			}
+	void agregarPelicula(string peli, Sala &sala, string fecha, string hora){
+		idFuncion++;
+		
+		Pelicula peliTemp;
+		peliTemp.nombre = peli;
+		
+		//Se agrega una pelicula al arreglo de salas en el multiplex
+		//Se hace un arreglo temporal con un espacio más para agregar la pelicula
+		Pelicula* temp = new Pelicula[cantPelis+1];
+		//Se pasan las salas anteriores al nuevo arreglo temporal
+		for(int i=0; i<cantPelis;i++){
+			temp[i] = peliculas[i];
 		}
+		//Se aumenta la variable que cuenta la cantidad de peliculas
+		cantPelis++;
+		//Se elimina el espacio en memoria ocupado por el arreglo de peliculas
+		delete[] peliculas;
+		peliculas = NULL;
+		//Se hace que apunte al nuevo espacio creado por medio del arreglo temporal
+		peliculas = temp;
+		//Se agrega al final el nuevo elemento, es decir la pelicula nueva
+		peliculas[cantPelis-1] = peliTemp;
+		
+		//Se agrega finalmente la función nueva
+		sala.agregarFuncion(peli, fecha, hora, idFuncion);
+
 	}
 	
 	//------------------------------------------------------
@@ -137,7 +159,27 @@ struct Multiplex{
 			cout << "\t\t\t"<<(i+1) <<". Sala '" <<salas[i].nombre << "' "; 
 			cout << "con una cantidad de " << salas[i].cantSillas << " sillas" << endl;
 		}
-	}	
+	}
+	
+	void listarPeliculas(){
+		for(int i=0; i<cantPelis;i++){
+			cout << "\t\t\t"<<(i+1) <<". Pelicula: '" <<peliculas[i].nombre << endl; 
+			cout << "\t\t\tFunciones disponibles: " << endl;
+			
+			for(int j=0; j < cantSalas ; j++){
+				for(int k=0; k < salas[j].cantFunciones ; k++){
+					if(salas[j].funciones[k].peli == peliculas[i].nombre){
+						cout << "\t\t\t" << salas[j].funciones[k].mostrarInfo();
+						cout << "\t\t\tSillas Generales disponibles: "<< salas[j].funciones[k].sillasGDisponibles() <<  endl;
+						cout << "\t\t\tSillas Preferenciales disponibles: "<< salas[j].funciones[k].sillasPDisponibles() <<  endl;
+					}
+				}
+			}
+			cout << "\t\t\t************************************************" << endl;
+		}
+	}
+	
+		
 };
 
 
