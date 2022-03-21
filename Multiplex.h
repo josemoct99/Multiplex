@@ -1,6 +1,5 @@
 #include"Sala.h"
 #include"Pelicula.h"
-#include"Tiquete.h"
 #include <vector>
 using namespace std;
 
@@ -16,27 +15,20 @@ struct Multiplex{
 	int cantPelis;
 	//Arreglo de Peliculas (inicialmente tiene 0)
 	Pelicula* peliculas;
-	//Cantidad de tiquetes en el multiplex
-	int cantTiquetes;
-	//Arreglo de tiquetes (inicialmente tiene 0)
-	Tiquete* tiquetes;
 	//Costo de los tiquetes preferenciales
-	int costoPreferencial;
-	//Costo de los tiquetes generales
-	int costoGeneral;
-	//ID para las funciones en general
+
 	int idFuncion;
+	//ID para las tiquetes en general
+	int idTiquete;
 	
 	//Constructor de Multiplex (Se llama una sola vez, al momento de hacer un objeto de esta estructura)
 	Multiplex(){
 		cantSalas = 0;
 		cantPelis = 0;
-		cantTiquetes = 0;
 		costoPreferencial = 12000;
 		costoGeneral = 8000;
 		salas = new Sala[cantSalas];
 		peliculas = new Pelicula[cantPelis];
-		tiquetes = new Tiquete[cantTiquetes];
 	}
 	
 	//Obtener una sala de cine
@@ -48,12 +40,59 @@ struct Multiplex{
 		}
 	}
 	
+	Pelicula & getPelicula(int numPeli){
+		for(int i=0; i<cantPelis; i++){
+			if ((i+1) == numPeli){
+				return peliculas[i];
+			}
+		}		
+	}
 	
+	bool existeFuncion(string id){
+		for(int j=0; j < cantSalas ; j++){
+			for(int k=0; k < salas[j].cantFunciones ; k++){
+				if(salas[j].funciones[k].id == id){
+					cout << "\t\t\tElije entre las siguientes sillas: " << endl;
+					cout << "\t\t\tGenerales: " << endl;
+					salas[j].funciones[k].mostrarSillasGDisponibles();
+					cout << endl;
+					cout << "\t\t\tPreferenciales: " << endl;
+					salas[j].funciones[k].mostrarsillasPDisponibles();
+					cout << endl << "\t\t\t";
+					return true;
+				}				
+			}
+		}
+		return false;
+	}
+	
+	
+	bool comprarTiqueteFuncion(string idFunc, string idSilla){
+		for(int j=0; j < cantSalas ; j++){
+			for(int k=0; k < salas[j].cantFunciones ; k++){
+				if(salas[j].funciones[k].id == idFunc){
+					if(salas[j].funciones[k].comprarSilla(idSilla)){
+						return true;
+					}
+				}				
+			}
+		}
+		return false;
+	}
 
 	//Comprobar que la sala añadida no exista
 	bool comprobarNombreSala(string nombre){
 		for(int i=0; i<cantSalas ; i++){
 			if(salas[i].nombre == nombre){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	bool comprobarNombrePelicula(string nombre){
+		for(int i=0; i<cantPelis ; i++){
+			if(peliculas[i].nombre == nombre){
 				return false;
 			}
 		}
@@ -125,8 +164,8 @@ struct Multiplex{
 		}
 	}
 	
+	
 	void agregarPelicula(string peli, Sala &sala, string fecha, string hora){
-		idFuncion++;
 		
 		Pelicula peliTemp;
 		peliTemp.nombre = peli;
@@ -149,8 +188,13 @@ struct Multiplex{
 		peliculas[cantPelis-1] = peliTemp;
 		
 		//Se agrega finalmente la función nueva
-		sala.agregarFuncion(peli, fecha, hora, idFuncion);
+		agregarFuncion(peli, sala, fecha, hora);
 
+	}
+	
+	void agregarFuncion(string peli, Sala &sala, string fecha, string hora){
+		idFuncion++;
+		sala.agregarFuncion(peli, fecha, hora, idFuncion);
 	}
 	
 	//------------------------------------------------------
@@ -163,20 +207,22 @@ struct Multiplex{
 	
 	void listarPeliculas(){
 		for(int i=0; i<cantPelis;i++){
-			cout << "\t\t\t"<<(i+1) <<". Pelicula: '" <<peliculas[i].nombre << endl; 
-			cout << "\t\t\tFunciones disponibles: " << endl;
-			
-			for(int j=0; j < cantSalas ; j++){
-				for(int k=0; k < salas[j].cantFunciones ; k++){
-					if(salas[j].funciones[k].peli == peliculas[i].nombre){
-						cout << "\t\t\t" << salas[j].funciones[k].mostrarInfo();
-						cout << "\t\t\tSillas Generales disponibles: "<< salas[j].funciones[k].sillasGDisponibles() <<  endl;
-						cout << "\t\t\tSillas Preferenciales disponibles: "<< salas[j].funciones[k].sillasPDisponibles() <<  endl;
-					}
+			cout << "\t\t\t["<<(i+1) <<"]. Pelicula: '" <<peliculas[i].nombre  << "'"<< endl; 
+		}
+	}
+	
+	void listarFuncionesPelicula(string nombrePeli){
+		for(int j=0; j < cantSalas ; j++){
+			for(int k=0; k < salas[j].cantFunciones ; k++){
+				if(salas[j].funciones[k].peli == nombrePeli){
+					cout << salas[j].funciones[k].mostrarInfo();
+					cout << "\t\t\tSillas Generales disponibles: "<< salas[j].funciones[k].sillasGDisponibles() <<  endl;
+					cout << "\t\t\tSillas Preferenciales disponibles: "<< salas[j].funciones[k].sillasPDisponibles() <<  endl;
+					cout << "\t\t\t************************************************" << endl;
 				}
 			}
-			cout << "\t\t\t************************************************" << endl;
 		}
+		cout << "\t\t\t************************************************" << endl;
 	}
 	
 		

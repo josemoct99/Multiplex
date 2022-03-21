@@ -27,8 +27,8 @@ struct Sala{
 	void agregarSilla(string categoria){
 		//Se hace el objeto silla con disponibilidad
 		Silla sillaNueva;
-		sillaNueva.id = cantSillas+1; //Acá es para emepzar el id desde 1
-		sillaNueva.cagetoria = categoria;
+		sillaNueva.id = int_to_string(cantSillas+1); //Acá es para emepzar el id desde 1
+		sillaNueva.categoria = categoria;
 		sillaNueva.disponible = true;
 		
 		//Ahora se agrega el objeto al arreglo de sillas
@@ -85,8 +85,11 @@ struct Sala{
 		for(int i=0; i<cantSillas;i++){
 			tempS[i] = sillas[i];
 		}
+		//*tempS = *sillas;
 		//Se pasa la copia de sillas a la función nueva
 		funcionNueva.setSillas(tempS, cantSillas);
+		
+
 		
 		//Ahora se agrega el objeto al arreglo de funciones
 		//Se hace un arreglo temporal con un espacio más para agregar la silla
@@ -119,7 +122,7 @@ struct Sala{
 		return true;
 	}
 	
-	void listarSillasDisponibles(FuncionCine funcion){
+	void listarSillasDisponibles(string idFuncion){
 		
 	}
 	
